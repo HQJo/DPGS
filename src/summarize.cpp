@@ -575,8 +575,6 @@ void DPGS::printInfo()
     printf("------------------------\n");
     fs << "------------------------\n";
     printf("|V_s| = %lu, |E_s| = %lu\n", numNode, numEdge);
-    snprintf(buffer, 128, "Current frac: %.2f\n", currentFrac);
-    fs << buffer;
     snprintf(buffer, 128, "|V_s| = %lu, |E_s| = %lu\n", numNode, numEdge);
     fs << buffer;
 
