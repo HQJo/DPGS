@@ -51,13 +51,13 @@ DPGS::DPGS(const std::string &dataset, const Graph &graph, const int maxB, const
         return x + LN(y);
     };
     origLen = 0.0;
-    // origLen += LN(N);
-    // origLen += N * log2(N);
+    origLen += LN(N);
+    origLen += N * log2(N);
     degPartLength = std::accumulate(degs.begin(), degs.end(), 0.0, accumulator);
-    // origLen += degPartLength;
-    // origLen += LN(M);
+    origLen += degPartLength;
+    origLen += LN(M);
     origLen += LnU(N * (N - 1) / 2, M);
-    // origLen += M * LN(1);
+    origLen += M * LN(1);
 
     nodesDict.resize(numNode);
     for (int64_t i = 0; i < numNode; i++)
@@ -111,7 +111,6 @@ double DPGS::run(const int T, const float nodeRatio)
     const double slope = double(maxB - minB) / (30 - 1);
 
     auto start = chrono::high_resolution_clock::now();
-    // auto startTime = clock(); // Use CPU time instead of wall clock time
     for (int t = 0; t < T; t++)
     {
         int b = slope * t + minB;
@@ -129,7 +128,6 @@ double DPGS::run(const int T, const float nodeRatio)
             printf("No merge in iteration %d.\n", t + 1);
             snprintf(buffer, 128, "No merge in iteration %d.\n", t + 1);
             fs << buffer;
-            // break;
         }
         else
         {
@@ -143,8 +141,6 @@ double DPGS::run(const int T, const float nodeRatio)
             }
         }
     }
-    // auto endTime = clock();
-    // auto elapsed = 1000.0 * (endTime - startTime) / CLOCKS_PER_SEC;
     auto end = chrono::high_resolution_clock::now();
     auto elapsed = chrono::duration<double, std::milli>(end - start);
 
@@ -491,7 +487,6 @@ void DPGS::merge(const int64_t u, const int64_t v)
                 graph.setEdge(p.first, u, p.second);
         }
     }
-    // deletedNodes.insert(v);
 }
 
 bool DPGS::isDeleted(const int64_t u)
@@ -540,7 +535,6 @@ void DPGS::saveResult(const std::string &dataset)
 
     // Save supernodes information
     fs.open(dir + "/supernodes.txt", std::ios_base::out);
-    // fs.open("./output/supernodes.txt", std::ios_base::out);
     if (!fs.is_open())
     {
         printf("Cannot save supernode dict!\n");

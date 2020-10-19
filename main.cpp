@@ -11,7 +11,14 @@ namespace po = boost::program_options;
 int main(int argc, char **argv)
 {
     po::options_description desc("Allowed options");
-    desc.add_options()("help,h", "produce help message")("debug", "debug flag")("input", po::value<std::string>(), "Input edgelist file")("dataset", po::value<std::string>(), "Dataset name")("delimeter", po::value<char>()->default_value('\t'), "Delimeter of edgelist file")("comment", po::value<char>()->default_value('#'), "Comment of edgelist file")("b", po::value<int>()->default_value(8), "Number of bands of LSH")("seed", po::value<int>()->default_value(0), "Random generator seed")("turn", po::value<int>()->default_value(20), "Number of iteration");
+    desc.add_options()("help,h", "produce help message")("debug", "debug flag")
+    ("input", po::value<std::string>(), "Input edgelist file")
+    ("dataset", po::value<std::string>(), "Dataset name")
+    ("delimeter", po::value<char>()->default_value('\t'), "Delimeter of edgelist file")
+    ("comment", po::value<char>()->default_value('#'), "Comment of edgelist file")
+    ("b", po::value<int>()->default_value(8), "Number of bands of LSH")
+    ("seed", po::value<int>()->default_value(0), "Random generator seed")
+    ("turn", po::value<int>()->default_value(20), "Number of iteration");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);

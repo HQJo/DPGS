@@ -1,1 +1,1 @@
-./main --input data/$1.txt --turn 30 --seed 0 --b 8 --ratio $2
+./main --input data/$1.txt --dataset $1 --turn 30 --seed 0 --b 8

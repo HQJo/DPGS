@@ -2,7 +2,10 @@
 
 This repository implements a graph summarization algorithm. The source code is written in C++, and provide simple wrapper for Python.
 
-## Run from cpp
+## Input file format
+The first line contains the number of nodes, each of the follwing line contains an edge given by two nodes. Node indices should be in the range of $[0, N-1]$.
+
+## Run
 To build the program, run `make compile`. You need to have a compiler with C++11 compatibility. You need to install boost_program_options library as well.
 
 After building, you can execute `./main` to run the program. Options include:
@@ -12,10 +15,9 @@ After building, you can execute `./main` to run the program. Options include:
 * `--b`: Maximum number of bands of LSH, default `8`.
 * `--seed`: RNG seed, default `0`.
 * `--turn`: Iteration turn of algorithm, default `30`.
-* `--ratio`: Ratio of node size, default `0.0` (meaning run T turns).
 * `--debug`: If specified, add debug information in log file.
 
-You can also run `run.sh {dataset}` to run with default parameter.
+You can also run `run.sh {dataset}` to run with default parameter. In this way, the graph edgelist should be placed in `data/{dataset}.txt`.
 
 For more details about options, see the source code.
 
