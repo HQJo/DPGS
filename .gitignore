@@ -31,3 +31,9 @@
 *.out
 *.app
 main
+
+.vscode
+data
+data/
+output
+output/
