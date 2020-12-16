@@ -15,7 +15,7 @@ class DPGS
 public:
     DPGS(const std::string &dataset, const Graph &graph, const int maxB, const int seed = 0, bool debug = false);
     ~DPGS();
-    double run(const int T = 20, const float nodeRatio = 1.0);
+    double run(const int T = 20);
     void updateLSH(const int r, const int b);
     size_t mergeGroup(std::vector<int64_t> &group);
     std::pair<double, int64_t> mergeGain(const int64_t u, const int64_t v);
@@ -23,6 +23,7 @@ public:
 
     bool isDeleted(const int64_t u);
     void saveResult(const std::string &dataset);
+    std::vector<std::vector<int64_t>> getNodesDict() const { return nodesDict; }
 
 private:
     std::string dataset;

@@ -29,7 +29,7 @@ DPGS::DPGS(const std::string &dataset, const Graph &graph, const int maxB, const
     {
         degs[u] = this->graph.Neighbors(u).size();
     }
-    saveDegs();
+    // saveDegs();
 
     M = std::accumulate(degs.begin(), degs.end(), 0);
     M /= 2;
@@ -106,9 +106,9 @@ void DPGS::initLogger()
         printf("Fail to open log file!\n");
 }
 
-double DPGS::run(const int T, const float nodeRatio)
+double DPGS::run(const int T)
 {
-    const double slope = double(maxB - minB) / (30 - 1);
+    const double slope = double(maxB - minB) / (T - 1);
 
     auto start = chrono::high_resolution_clock::now();
     for (int t = 0; t < T; t++)
