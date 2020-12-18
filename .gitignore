@@ -32,6 +32,9 @@
 *.app
 main
 
+# python
+__pycache__
+
 .vscode
 data
 data/
