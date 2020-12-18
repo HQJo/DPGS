@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     ("delimeter", po::value<char>()->default_value('\t'), "Delimeter of edgelist file")
     ("comment", po::value<char>()->default_value('#'), "Comment of edgelist file")
     ("b", po::value<int>()->default_value(8), "Number of bands of LSH")
-    ("seed", po::value<int>()->default_value(0), "Random generator seed")
+    ("seed", po::value<int>()->default_value(42), "Random generator seed")
     ("turn", po::value<int>()->default_value(20), "Number of iteration");
 
     po::variables_map vm;
