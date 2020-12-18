@@ -93,7 +93,7 @@ if __name__ == '__main__':
     path = os.path.join('./output', args.dataset, 'summary.edgelist')
     sm_s = read_edgelist(path, nodes_dict, args.delimeter,
                          args.comment, True, shape=(n, n))
-    path = os.path.join('./output', args.dataset, 'sm_s.npz')
+    path = os.path.join('./output', args.dataset, 'A_s.npz')
     ssp.save_npz(path, sm_s)
     print("Save sm done!", sm_s.shape)
 

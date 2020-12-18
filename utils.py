@@ -24,4 +24,13 @@ def construct_P(degs: np.array, nodes_dict: dict, dataset: str):
     n = len(nodes_dict)
     P = ssp.coo_matrix((datas, (rows, cols)), shape=(n, N))
     P_ = ssp.coo_matrix(([1] * len(rows), (cols, rows)), shape=(N, n))
+    ssp.save_npz(os.path.join('output', dataset, 'P.npz'), P)
+    ssp.save_npz(os.path.join('output', dataset, 'P_.npz'), P_)
     return P, P_
+
+
+def post_process(adj: ssp.spmatrix, nodes_dict: dict, dataset: str):
+    degs = np.array(adj.sum(axis=1)).squeeze()
+    P, P_ = construct_P(degs, nodes_dict, dataset)
+    adj_s = P @ adj @ P.T
+    ssp.save_npz(os.path.join('output', dataset, 'A_s.npz'), adj_s)
