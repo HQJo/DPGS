@@ -1,3 +1,4 @@
+import os
 import pickle
 import subprocess
 from argparse import ArgumentParser
@@ -31,12 +32,19 @@ args = parser.parse_args()
 
 if __name__ == '__main__':
     sm = ssp.load_npz(args.adj)
+    N = sm.shape[0]
     sm = sm.tocoo()
     row = sm.row.astype(np.uint64)
     col = sm.col.astype(np.uint64)
 
     graph = DPGS.from_row_col(sm.shape[0], row, col)
-    model = DPGS.DPGS(graph, args.b, args.seed, args.debug)
+    model = DPGS.DPGS(args.dataset, graph, args.b, args.seed, args.debug)
     model.run(args.turn)
     nodes_dict = model.getNodesDict()
-    pickle.dump(nodes_dict, open('./nodes_dict.pkl', 'wb'))
+    nodes_dict = dict((i, sn)
+                      for (i, sn) in enumerate(nodes_dict) if len(sn) > 0)
+
+    if not os.path.exists(f'./output/{args.dataset}'):
+        os.mkdir(f'./output/{args.dataset}')
+    pickle.dump(nodes_dict, open(
+        f'./output/{args.dataset}/nodes_dict.pkl', 'wb'))
