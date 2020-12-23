@@ -1,7 +1,6 @@
-import os
-import pickle
 import subprocess
 from argparse import ArgumentParser
+from utils import post_process
 
 import numpy as np
 import scipy.sparse as ssp
@@ -29,20 +28,18 @@ parser.add_argument('--debug', action='store_true',
 args = parser.parse_args()
 
 if __name__ == '__main__':
-    sm = ssp.load_npz(args.adj)
-    N = sm.shape[0]
-    sm = sm.tocoo()
-    row = sm.row.astype(np.uint64)
-    col = sm.col.astype(np.uint64)
+    adj = ssp.load_npz(args.adj)
+    N = adj.shape[0]
+    adj[adj.nonzero()] = 1
+    adj = adj.maximum(adj.T)
+    row = adj.row.astype(np.uint64)
+    col = adj.col.astype(np.uint64)
 
-    graph = DPGS.from_row_col(sm.shape[0], row, col)
+    graph = DPGS.from_row_col(N, row, col)
     model = DPGS.DPGS(args.dataset, graph, args.b, args.seed, args.debug)
     model.run(args.turn)
     nodes_dict = model.getNodesDict()
     nodes_dict = dict((i, sn)
                       for (i, sn) in enumerate(nodes_dict) if len(sn) > 0)
 
-    if not os.path.exists(f'./output/{args.dataset}'):
-        os.mkdir(f'./output/{args.dataset}')
-    pickle.dump(nodes_dict, open(
-        f'./output/{args.dataset}/nodes_dict.pkl', 'wb'))
+    post_process(adj, nodes_dict, args.dataset)

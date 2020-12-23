@@ -1,4 +1,5 @@
 import os
+import pickle
 
 import numpy as np
 import scipy.sparse as ssp
@@ -30,6 +31,11 @@ def construct_P(degs: np.array, nodes_dict: dict, dataset: str):
 
 
 def post_process(adj: ssp.spmatrix, nodes_dict: dict, dataset: str):
+    if not os.path.exists(f'./output/{dataset}'):
+        os.mkdir(f'./output/{dataset}')
+    path = os.path.join('output', dataset, 'nodes_dict.pkl')
+    pickle.dump(nodes_dict, open(path, 'wb'))
+
     degs = np.array(adj.sum(axis=1)).squeeze()
     P, P_ = construct_P(degs, nodes_dict, dataset)
     adj_s = P @ adj @ P.T
