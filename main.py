@@ -31,7 +31,7 @@ if __name__ == '__main__':
     adj = ssp.load_npz(args.adj)
     N = adj.shape[0]
     adj[adj.nonzero()] = 1
-    adj = adj.maximum(adj.T)
+    adj = adj.maximum(adj.T).tocoo()
     row = adj.row.astype(np.uint64)
     col = adj.col.astype(np.uint64)
 
