@@ -38,5 +38,5 @@ def post_process(adj: ssp.spmatrix, nodes_dict: dict, dataset: str):
 
     degs = np.array(adj.sum(axis=1)).squeeze()
     P, P_ = construct_P(degs, nodes_dict, dataset)
-    adj_s = P @ adj @ P.T
+    adj_s = P_.T @ adj @ P_
     ssp.save_npz(os.path.join('output', dataset, 'A_s.npz'), adj_s)
