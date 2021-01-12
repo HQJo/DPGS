@@ -106,12 +106,14 @@ void DPGS::initLogger()
         printf("Fail to open log file!\n");
 }
 
-double DPGS::run(const int T)
+double DPGS::run(const int T, const double ratio)
 {
+    this->ratio = ratio;
     const double slope = double(maxB - minB) / (T - 1);
 
     auto start = chrono::high_resolution_clock::now();
-    for (int t = 0; t < T; t++)
+    int t = 0;
+    while (1)
     {
         int b = slope * t + minB;
         if (b > maxB)
@@ -125,7 +127,7 @@ double DPGS::run(const int T)
             mergeCnt += mergeGroup(group);
         if (mergeCnt == 0)
         {
-            printf("No merge in iteration %d.\n", t + 1);
+            printf("No merge in iteration %d.\n", t);
             snprintf(buffer, 128, "No merge in iteration %d.\n", t + 1);
             fs << buffer;
         }
@@ -140,6 +142,9 @@ double DPGS::run(const int T)
                 fs << buffer;
             }
         }
+        t++;
+        if (numNode <= ratio * N)
+            break;
     }
     auto end = chrono::high_resolution_clock::now();
     auto elapsed = chrono::duration<double, std::milli>(end - start);
@@ -310,6 +315,10 @@ void DPGS::updateLSH(const int r, const int b)
 size_t DPGS::mergeGroup(std::vector<int64_t> &group)
 {
     size_t mergeCnt = 0;
+    if (numNode <= N * this->ratio)
+    {
+        return mergeCnt;
+    }
     // Sample and merge
     int times = log2(group.size());
     int nSkip = 0;
@@ -365,6 +374,11 @@ size_t DPGS::mergeGroup(std::vector<int64_t> &group)
             totalGain += maxGain;
             group.erase(group.begin() + posV);
 
+            if (numNode <= N * ratio)
+            {
+                end = true;
+                break;
+            }
             if (debug)
             {
                 snprintf(buffer, 128, "Merge (%lu, %lu), gain: %.2f\n", maxU, maxV, maxGain);
