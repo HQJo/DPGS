@@ -1,4 +1,5 @@
 import subprocess
+import time
 from argparse import ArgumentParser
 from utils import post_process
 
@@ -25,16 +26,23 @@ parser.add_argument('--b', type=int, default=8, help='Maximum band of LSH')
 parser.add_argument('--seed', type=int, default=42, help='RNG seed')
 parser.add_argument('--debug', action='store_true',
                     default=False, help='Debug flag')
+parser.add_argument('--selfloop', action='store_true',
+                    default=False, help='Debug flag')
 
 args = parser.parse_args()
 
 if __name__ == '__main__':
-    adj = ssp.load_npz(args.adj)
+    adj = ssp.load_npz(args.adj).tocsr()
     N = adj.shape[0]
-    adj[adj.nonzero()] = 1
+
+    # Make sure undirected and symmetric
+    adj[np.diag_indices_from(adj)] = 0
+
+    adj.eliminate_zeros()
     adj = adj.maximum(adj.T).tocoo()
     row = adj.row.astype(np.uint64)
     col = adj.col.astype(np.uint64)
+    adj = ssp.csr_matrix(([1]*len(row), (row, col)), shape=adj.shape, dtype=int)
 
     graph = DPGS.from_row_col(N, row, col)
     model = DPGS.DPGS(args.dataset, graph, args.b, args.seed, args.debug)

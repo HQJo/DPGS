@@ -115,6 +115,7 @@ double DPGS::run(const int T, const double ratio)
     int t = 0;
     while (1)
     {
+        if (t > T) break;
         int b = slope * t + minB;
         if (b > maxB)
             b = maxB;
@@ -314,6 +315,7 @@ void DPGS::updateLSH(const int r, const int b)
 
 size_t DPGS::mergeGroup(std::vector<int64_t> &group)
 {
+    double thres = 0;
     size_t mergeCnt = 0;
     if (numNode <= N * this->ratio)
     {
@@ -329,7 +331,7 @@ size_t DPGS::mergeGroup(std::vector<int64_t> &group)
     {
         if (group.size() <= 1)
             break;
-        double maxGain = 0;
+        double maxGain = thres;
         int64_t maxNewE = -1;
         int64_t maxU, maxV;
 
@@ -364,7 +366,7 @@ size_t DPGS::mergeGroup(std::vector<int64_t> &group)
                 maxNewE = new_e;
             }
         }
-        if (maxGain > 0)
+        if (maxGain > thres)
         {
             nSkip = 0;
             merge(maxU, maxV);
